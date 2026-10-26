@@ -11,7 +11,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
 import { ContactSettingsModule } from './contact-settings/contact-settings.module.js';
-
+import { readFileSync } from 'node:fs';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -37,6 +37,13 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
         username: config.get<string>('DB_USERNAME', 'root'),
         password: config.get<string>('DB_PASSWORD', ''),
         database: config.get<string>('DB_DATABASE', 'cybersathi_db'),
+        ssl: {
+          ca: readFileSync(
+            new URL('../certs/aiven-ca.pem', import.meta.url),
+            'utf8',
+          ),
+          rejectUnauthorized: true,
+        },
         autoLoadEntities: true,
         synchronize: false,
       }),
